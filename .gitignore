@@ -1,0 +1,12 @@
+# Editor/IDE specific files
+.idea/
+/.vscode/
+/*.swp
+*.DS_Store
+
+# Ignore config (sensitive)
+config.yaml
+
+deploy.sh
+
+driver/
