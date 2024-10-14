@@ -23,7 +23,6 @@ var shutdownTimeout = cfg.Get().TikTok.ShutdownTimeout
 var fetchMaxTries = cfg.Get().TikTok.DownloadMaxRetries
 var tracker = newTracker()
 var shutdownInitiated = false
-var cookies []playwright.OptionalCookie
 
 func Init() {
 	var err error
@@ -50,20 +49,6 @@ func Init() {
 	if err != nil {
 		log.S().Panicf("could not launch browser: %v", err)
 	}
-}
-
-func SetCookiesFromJson(json string) error {
-	newCookies, err := parseCookies(json)
-
-	if err != nil {
-		return err
-	}
-
-	cookies = newCookies
-
-	log.S().Info("Updating global cookies")
-
-	return nil
 }
 
 func GracefulShutdown() {
@@ -185,13 +170,6 @@ func innerFetch(tiktokURL string) (*TikTok, error) {
 	page, err := context.NewPage()
 	if err != nil {
 		log.S().Fatalf("could not create new page: %v", err)
-	}
-
-	if cookies != nil {
-		// TODO: Cookies
-		// if err = page.Context().AddCookies(cookies); err != nil {
-		// 	log.S().Warnf("failed to add cookies: %v", err)
-		// }
 	}
 
 	if _, err := page.Goto(tiktokURL); err != nil {
